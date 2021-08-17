@@ -2,6 +2,8 @@ package com.mypackage1.hibernate.demo.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,6 +14,10 @@ public class Student {
 	// MAPPING FIELDS TO DATABASE COLUMNS (@ID and @COLUMN ANNOTATION)
 	
 	@Id // @Id Annotation states that this field is the PRIMARY KEY.(So, this field int 'id' is primary key).
+	// Above, hibernate will generate primary key with the appropriate way BUT we can also 
+	// EXPLICITLY GENERATE PRIMARY KEY by providing strategy that we want to generate primary key.
+	// So we do this by @GeneratedValue() Annotation
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id") // @Column Annotation specifies the column name in the table. (So int 'id' field will map to 'id' column in table).
 	private int id;
 	
