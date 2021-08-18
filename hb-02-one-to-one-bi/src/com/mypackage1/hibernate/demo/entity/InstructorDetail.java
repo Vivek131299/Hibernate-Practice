@@ -36,14 +36,17 @@ public class InstructorDetail {
 	// add new field for instructor (also getter/setter methods).
 	// add @OneToOne Annotation so that it will give bi-directional relationship.
 	
-	@OneToOne(mappedBy="instructorDetail", cascade=CascadeType.ALL)
+	/*@OneToOne(mappedBy="instructorDetail", cascade=CascadeType.ALL)*/
 	// Above, 'mappedBy' refers to the 'instructorDetail' property/field of 'Instructor' class.
 	// So, hibernate will use information from the Instructor class's @JoinColumn to figure out
 	// how to find the associated instructor.
 	// And CascadeType=ALL will cascade all operations to associated instructor.
+	// BUT IF we want to delete only Instructor Detail and want to keep Instructor as it is, then we 
+	// have to modify the CascadeType. So, we put every other type in curly braces separated by
+	// comma, except REMOVE. like:
+	@OneToOne(mappedBy="instructorDetail", 
+			  cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private Instructor instructor;
-	
-	
 	
 	
 	

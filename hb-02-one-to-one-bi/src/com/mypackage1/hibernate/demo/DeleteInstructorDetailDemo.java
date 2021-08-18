@@ -30,7 +30,7 @@ public class DeleteInstructorDetailDemo {
 			session.beginTransaction();
 
 			// get the instructor detail object
-			int theId = 2;
+			int theId = 3;
 			InstructorDetail tempInstructorDetail = session.get(InstructorDetail.class, theId);
 			// This will return null if theId is not valid (if entry is not present in database).
 			// Then our tempInstructorDetail will be null.
@@ -45,6 +45,21 @@ public class DeleteInstructorDetailDemo {
 			/// DELETE THE INSTRUCTOR DETAIL ///
 			
 			System.out.println("Deleting tempInstructorDetail: " + tempInstructorDetail);
+			
+			// If we try to delete only delete only Instructor Detail and want to keep Instructor as it is,
+			// as we have already modified CascadeType by removing REMOVE type in InstructorDetail class,
+			// we will still get error.
+			// To solve this, we have to REMOVE THE ASSOCIATED OBJECT REFERENCE.
+			// And BREAK BI-DIRECTIONAL LINK.
+			
+			tempInstructorDetail.getInstructor().setInstructorDetail(null);
+			// So we are getting the Instructor and setting that person's InstructorDetail to null.
+			// So, this will change the associated Instructor's 'instructor_detail_id' column to null.
+			// So we are breaking the bi-directional link/chain for this relationship.
+			// And then we perform delete operation.
+			
+			// And now it will delete the InstructorDetail but actually keep the Instructor.
+			
 			session.delete(tempInstructorDetail);
 			
 			// This will also do a Cascade Delete on the associated instructor because we 
