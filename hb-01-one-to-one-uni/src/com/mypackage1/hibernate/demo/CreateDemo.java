@@ -4,49 +4,59 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import com.mypackage1.hibernate.demo.entity.Instructor;
+import com.mypackage1.hibernate.demo.entity.InstructorDetail;
 import com.mypackage1.hibernate.demo.entity.Student;
 
-public class CreateStudentDemo {
+public class CreateDemo {
 
 	public static void main(String[] args) {
 
-		// create SESSION FACORY.
-		// Session Factory reads the hibernate config file (hibernate.cfg.xml) and
-		// creates Session objects.
-		// This is heavy-weight object.
-		// This only gets created Once in our app.
 		SessionFactory factory = new Configuration()
 								.configure("hibernate.cfg.xml")
-								.addAnnotatedClass(Student.class)
+								.addAnnotatedClass(Instructor.class)
+								.addAnnotatedClass(InstructorDetail.class)
 								.buildSessionFactory();
-		// Above, if we do not give config file name in .config() then it searches for file with 
-		// default name 'hibernate.cfg.xml'. So we can leave it empty if our file is saved by name 'hibernate.cfg.xml'.
-		// .addAnnotatedClass() takes an argument of class in which we have our Entity and Table Annotations.(i.e. Student class).
+	
+		// .addAnnotatedClass() takes an argument of class in which we have our
+		// Entity and Table Annotations.(i.e. Instructor class and InstructorDetail class).
 		
 		
-		// create a SESSION.
-		// Session wraps a JDBC connection.
-		// This is main object used to save and retrieve objects to database.
-		// This is Short lived object. So for a given method, we will get a session, we will 
-		// use it, and we will throw it. And for another method we will get another, use it, and throw away.
-		// Session is retrieved from Session Factory.
 		Session session = factory.getCurrentSession();
 		
 		
 		try {
-			// In try block, we will use the Session object created above 
-			// to save/retrieve the Java object to database.
+			// create the objects
+			Instructor tempInstructor = new Instructor("Chad", "Darby", "darby@luv2code.com");
 			
-			// create a Student object
-			System.out.println("Creating a new Student object...");
-			Student tempStudent = new Student("Paul", "Wall", "paul@hibernate.com");
+			InstructorDetail tempInstructorDetail = 
+						new InstructorDetail("http://www.luv2code.com/youtube", "Luv 2 code!!!");
+			
+			// another entry
+//			Instructor tempInstructor = new Instructor("Madhu", "Patel", "madhu@luv2code.com");
+//			
+//			InstructorDetail tempInstructorDetail = 
+//						new InstructorDetail("http://www.youtube.com", "Guitar");
+//			
+			
+			// associate the objects
+			tempInstructor.setInstructorDetail(tempInstructorDetail); // At this point, these
+			// objects are associated in only memory and not in database. We still need to save it 
+			// which we do below (session.save()).
 			
 			// start a transaction
 			session.beginTransaction();
-			
-			// save the Student object
-			System.out.println("Saving the student...");
-			session.save(tempStudent);
+
+			// save the instructor
+			System.out.println("Saving instructor: " + tempInstructor);
+			session.save(tempInstructor);
+			// NOTE: This will also save the tempInstructorDetail object because
+			//       of CascadeType.ALL that we defined while Mapping(See Instructor class).
+			//       So, CascadeType.ALL means it will save the actual object and also any 
+			//       associated objects. This apply for all operations like saving(like in this case),
+			//       deleting, etc..
+			//       So basically by saving data in tempInstructor table, it will also save data in 
+			//       tempInstructorDetail table.
 
 			// commit a transaction
 			session.getTransaction().commit();
