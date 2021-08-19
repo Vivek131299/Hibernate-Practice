@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -49,8 +51,36 @@ public class Course {
 	
 	/// CONFIGURING MANY-TO-MANY RELATIONSHIP WITH STUDENTS ///
 	// Because a course can have many students and also a student can have many courses.
+	// So we have to ALSO Configure Student class for this. (See Student class)
 	// Also define getters/setters and a convenience method (for adding a student to course) for this field.
+	@ManyToMany(fetch=FetchType.LAZY, 
+			cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@JoinTable(
+			   name="course_student", 
+			   joinColumns=@JoinColumn(name="course_id"), 
+			   inverseJoinColumns=@JoinColumn(name="student_id")
+			  )
 	private List<Student> students;
+	
+	///// @JOINTABLE ANNOTATION /////
+	// Above, for ManyToMany, we make use of @JoinTable ANNOTATION.
+	// In this annotation, we tell hibernate that which columns to use for actually looking up 
+	// the appropriate student for our course.
+	//
+	// // Joint Table // So, 'course_student' is name of our JoinTable. This 'course_student' table we have already created
+	// in our MySQL database. This table consists of 2 columns (course_id and student_id). Those both
+	// columns are primary key AND ALSO foreign key. So, course_id refers to the 'id' column of 
+	// 'course' table and student_id refers to the 'id' column of 'student' table.
+	//
+	// After that, in 'joinColumns', we need to give actual reference for the regular column(@JoinColumn) 
+	// 'course_id' which refers to THIS SIDE (Course class) or 'course' table and points to 'id' column in it.
+	// AND in 'inverseJoinColumns', we need to give reference to the column(@JoinColumn) 
+	// 'student_id' which refers to the OTHER SIDE/INVERSE (Student class) or 'student' table and points to 'id' column in it.
+	//
+	// Because we have 2 columns in our course_student table (JoinTable) and we are currently in Course
+	// class, So THIS side becomes Course class and the INVERSE/OTHER SIDE becomes Student class.
+	//
+	// So, in Student class, we will do OPPOSITE of this. (See Student class).
 	
 	
 	

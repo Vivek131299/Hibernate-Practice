@@ -1,27 +1,29 @@
 package com.mypackage1.hibernate.demo.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-@Entity // @Entity Annotation Maps the class to database.(In this case, it will map this class 'Student' to database 'Student').
-@Table(name="student") // @Table Annotation maps this class/Entity to a given table (i.e. "student" in this case). 
+@Entity 
+@Table(name="student")
 public class Student {
-
-	// MAPPING FIELDS TO DATABASE COLUMNS (@ID and @COLUMN ANNOTATION)
 	
-	@Id // @Id Annotation states that this field is the PRIMARY KEY.(So, this field int 'id' is primary key).
-	// Above, hibernate will generate primary key with the appropriate way BUT we can also 
-	// EXPLICITLY GENERATE PRIMARY KEY by providing strategy that we want to generate primary key.
-	// So we do this by @GeneratedValue() Annotation
+	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id") // @Column Annotation specifies the column name in the table. (So int 'id' field will map to 'id' column in table).
+	@Column(name="id") 
 	private int id;
 	
-	@Column(name="first_name") // This field String 'firstName' will map to 'first_name' column in table.
+	@Column(name="first_name") 
 	private String firstName;
 	
 	@Column(name="last_name")
@@ -29,6 +31,27 @@ public class Student {
 	
 	@Column(name="email")
 	private String email;
+	
+	
+	/// CONFIGURING MANY-TO-MANY RELATIONSHIP WITH COURSES ///
+	// (See Course class from line 52 for explanation of @ManyToMany and @JoinTable Annotations).
+	@ManyToMany(fetch=FetchType.LAZY, 
+			cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@JoinTable(
+			   name="course_student", 
+			   joinColumns=@JoinColumn(name="student_id"), 
+			   inverseJoinColumns=@JoinColumn(name="course_id")
+			  )
+	private List<Course> courses;
+	// So here, we just swapped JoinColumn names because we are in Student class now.
+	// (See Course class from line 75 for explanation)
+	// 
+	// So, joinColumns 'student_id' refers to THIS SIDE(Student class) or 'student' table, 
+	// AND inverseJoinColumns 'course_id' refers to the OTHER SIDE?INVERSE (Course class) or 'course' table.
+	//
+	// This is just OPPOSITE of what we did in the Course class.
+	// (See Course class for more explanation).
+	
 	
 	// defining no-argument constructor
 	public Student() {
@@ -74,7 +97,17 @@ public class Student {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
+	}
+
+	
 	// toString() method.
 	@Override
 	public String toString() {
