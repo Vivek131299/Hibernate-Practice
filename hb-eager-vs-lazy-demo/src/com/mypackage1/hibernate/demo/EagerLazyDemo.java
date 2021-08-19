@@ -59,6 +59,14 @@ public class EagerLazyDemo {
 			System.out.println("luv2code: Instructor: " + tempInstructor);
 						
 			
+			/// For LAZY ///
+			// At this point if we try to CLOSE THE SESSION by:
+			//session.close();
+			// then it WILL THROW AN ERROR/EXCEPTION (LazyInitializationException).
+			// because courses are Lazy loaded and we closed the session before accessing
+			// the data.
+			
+			
 			// getting the courses for the instructor
 			System.out.println("luv2code: Courses: " + tempInstructor.getCourses());
 			
