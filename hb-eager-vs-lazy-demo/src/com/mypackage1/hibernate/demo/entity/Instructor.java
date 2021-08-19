@@ -46,12 +46,19 @@ public class Instructor {
 	/// DEFINING FETCH TYPE AS EAGER ///
 	// As we know, the instructor has a list of courses.
 	// So if we set the FetchType for courses as Eager, then this will basically load the 
-	// instructor and also load the courses at the same time.
+	// instructor and also load the courses AT THE SAME TIME.
 	
-	@OneToMany(fetch=FetchType.EAGER, 
+	/// DEFINING FETCH TYPE AS LAZY ///
+	// As we know, the instructor has a list of courses.
+	// So if we set the FetchType for courses as Eager, then this will load the 
+	// courses ONLY ON DEMAND.
+	
+	@OneToMany(fetch=FetchType.LAZY, 
 			   mappedBy="instructor", 
 			   cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
 	private List<Course> courses;
+	
+	// Above later on, we changed FetchType to LAZY.
 	
 	
 	// create constructors

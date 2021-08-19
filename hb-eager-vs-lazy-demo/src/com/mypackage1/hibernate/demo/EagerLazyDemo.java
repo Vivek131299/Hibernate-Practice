@@ -39,10 +39,19 @@ public class EagerLazyDemo {
 			int theId = 1;
 			Instructor tempInstructor = session.get(Instructor.class, theId);
 			
+			/// For EAGER ///
 			// At this point EVERYTHING ID LOADED/FETCHED, the instructor, instructor details and
 			// the courses because of the EAGER LOADING. 
 			// We have all this data in the Memory.
 			// So below when we print this, there is no need to hit the database anymore.
+			
+			
+			/// For LAZY ///
+			// At this point ONLY THE INSTRUCTOR OBJECT IS LOADED.
+			// So at this point we only have instructor and instructor detail in our Memory.
+			// And below, when we get and print the courses by .getCourses() (Getter method), 
+			// then only COURSES WILL BE LOADED ON DEMAND/REQUEST.
+			
 			
 			
 			/// RETRIEVE THE COURSES FOR THIS(tempInstructor/id=1) INSTRUCTOR ///
@@ -52,6 +61,12 @@ public class EagerLazyDemo {
 			
 			// getting the courses for the instructor
 			System.out.println("luv2code: Courses: " + tempInstructor.getCourses());
+			
+			/// For LAZY ///
+			// At this point, it will load the courses from the database and print
+			// it because we have set FetchType as LAZY. 
+			// So when we demand/request for courses (like by using getter method in this case),
+			// then only it fetches from database.
 			
 
 			// commit a transaction
