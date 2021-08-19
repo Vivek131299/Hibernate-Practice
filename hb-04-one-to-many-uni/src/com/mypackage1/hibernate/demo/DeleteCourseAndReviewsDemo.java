@@ -9,7 +9,7 @@ import com.mypackage1.hibernate.demo.entity.Instructor;
 import com.mypackage1.hibernate.demo.entity.InstructorDetail;
 import com.mypackage1.hibernate.demo.entity.Review;
 
-public class CreateCourseAndReviewsDemo {
+public class DeleteCourseAndReviewsDemo {
 
 	public static void main(String[] args) {
 
@@ -36,20 +36,29 @@ public class CreateCourseAndReviewsDemo {
 			session.beginTransaction();
 
 			
-			// create a course
-			Course tempCourse = new Course("Pacman - How To Score One Million Points");
+			// get the course
+			int theId = 10;
+			Course tempCourse = session.get(Course.class, theId);
 			
-			// add some reviews to that course
-			tempCourse.addReview(new Review("Great course ... loved it!"));
-			tempCourse.addReview(new Review("Cool course ... job well done"));
-			tempCourse.addReview(new Review("What a dumb course, you are an idiot!"));
-
-			// save the course and leverage the cascade all.
-			// So, when we save the course the it will ALSO SAVE all the associated reviews due to CASCADE ALL.
-			System.out.println("Saving the course");
+			// print the course
+			System.out.println("Deleting the course...");
 			System.out.println(tempCourse);
-			System.out.println(tempCourse.getReviews());
-			session.save(tempCourse);
+			
+			// print the course reviews
+			System.out.println(tempCourse.getReviews());	
+			// NOTE that the reviews are Configured as LAZY FETCH.
+			// So when we load the course we only get the course.
+			// Then later on we get course reviews separately by .getReviews() getter method 
+			// that we used here.
+			
+			
+			/// DELETING THE COURSE // 
+			session.delete(tempCourse);
+			
+			// NOTE that when we delete the course, it will actually do a 
+			// CASCADE DELETE on the associated reviews for that course.
+			// So it will ALSO DELETE the associated reviews for this course 
+			// because we have CascadeType as ALL.
 			
 
 			// commit a transaction
