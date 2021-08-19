@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,8 +49,9 @@ public class Instructor {
 	// So we define a List to store courses and also add Getters and Setters for it.
 	// Also add some convenience methods for bi-directional relationship.
 	
-	@OneToMany(mappedBy="instructor", 
-			cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@OneToMany(fetch=FetchType.LAZY, 
+			   mappedBy="instructor", 
+			   cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
 	// This mappedBy refers to 'instructor' property in 'Course' class.
 	// And we are not adding Cascading Delete.
 	private List<Course> courses;

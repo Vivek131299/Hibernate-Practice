@@ -1,13 +1,18 @@
 package com.mypackage1.hibernate.demo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,14 +28,24 @@ public class Course {
 	@Column(name="title")
 	private String title;
 	
-	/// SETTING UP THE MANY-TO-ONE RELATIONSHIP ///
-	// This class Course has ManyToOne Relationship with an Instructor.
-	// Because one Instructor can have many courses.
+	
 	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-	// Above, we don't give CascadeType of REMOVE because we don't want to apply Cascading Deletes.
-	@JoinColumn(name="instructor_id") // course has the instructor_id column, that has the key
-	// that points back to the instructor. So that the course knows how to find its given instructor.
+	@JoinColumn(name="instructor_id")
 	private Instructor instructor;
+	
+	
+	/// CONFIGURING ONE-TO-MANY RELATIONSHIP WITH REVIEWS///
+	// Because a course can have many reviews.
+	// Also define getters/setters and a convenience method (for adding reviews to course) for this field.
+	
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	// We are defining CascadeType as ALL because we also want to apply Cascade Date operation,
+	// because if we delete a course, then we also want to delete the associated reviews.
+	@JoinColumn(name="course_id")
+	// 'course_id' is the actual column in the 'review' table that will point back to the actual course.
+	private List<Review> reviews;
+	
+	
 	
 	// define constructors
 	public Course() {
@@ -67,6 +82,26 @@ public class Course {
 		this.instructor = instructor;
 	}
 
+	
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	
+	// add a convenience method
+	public void addReview(Review theReview) {
+		
+		if (reviews == null) {
+			reviews = new ArrayList<>();
+		}
+		
+		reviews.add(theReview);
+	}
+	
 	
 	//define toString() method
 	@Override
