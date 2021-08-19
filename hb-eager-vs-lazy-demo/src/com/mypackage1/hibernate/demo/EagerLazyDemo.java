@@ -59,12 +59,22 @@ public class EagerLazyDemo {
 			System.out.println("luv2code: Instructor: " + tempInstructor);
 						
 			
-			/// For LAZY ///
+			// Getting courses before session closes below.
+			System.out.println("luv2code: Courses: " + tempInstructor.getCourses());
+			
+			////////// For LAZY //////////
+			///// Closing the Session Issue /////
 			// At this point if we try to CLOSE THE SESSION by:
-			//session.close();
+			session.close();
+			System.out.println("\nluv2code: The session is now closed!\n");
 			// then it WILL THROW AN ERROR/EXCEPTION (LazyInitializationException).
 			// because courses are Lazy loaded and we closed the session before accessing
 			// the data.
+			//
+			///// Resolving Lazy Closing the Session Issue /////
+			// Option 1: Call getter method while session is open(before closing the session).
+			//           So, we can copy below print line ad paste it before session.close()
+			//           above.(on line 63).
 			
 			
 			// getting the courses for the instructor
