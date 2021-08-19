@@ -75,6 +75,7 @@ public class EagerLazyDemo {
 			// Option 1: Call getter method while session is open(before closing the session).
 			//           So, we can copy below print line ad paste it before session.close()
 			//           above.(on line 63).
+			// Option 2: Querying with HQL. (See FetchJoinDemo.java file).
 			
 			
 			// getting the courses for the instructor
